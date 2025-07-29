@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import {
 	Card,
 	CardContent,
@@ -18,24 +19,45 @@ import {
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { getCurrentUser } from "@/utils/auth"
+import type { JwtPayload } from "@/utils/auth"
 
 const editUserSchema = z.object({
-	name: z.string().min(1, "Invalid name"),
+	first_name: z.string().min(1, "Invalid name"),
+	last_name: z.string().min(1, "Invalid name"),
 	email: z.string().email("Invalid email")
 })
 
 const EditUser = () => {
+	const [user, setUser] = useState<JwtPayload | null>(null)
+
 	const form = useForm<z.infer<typeof editUserSchema>>({
 		resolver: zodResolver(editUserSchema),
 		defaultValues: {
 			//add default values here according to the jwt token
-			name: "Boitumelo",
-			email: "itsyourboy@gmail.com",
+			first_name: user?.fname,
+			last_name: user?.lname,
+			email: user?.email,
 		}
 	})
 
+	useEffect(() => {
+		const currentUser = getCurrentUser()
+		setUser(currentUser)
+		if (currentUser) {
+			form.reset({
+				first_name: currentUser.fname,
+				last_name: currentUser.lname,
+				email: currentUser.email,
+			})
+		}
+	}, [])
+
+
+
 
 	const onSubmit = (data: z.infer<typeof editUserSchema>) => {
+		//
 		console.log(data)
 	}
 
@@ -53,12 +75,25 @@ const EditUser = () => {
 					<form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6 text-left">
 						<FormField
 							control={form.control}
-							name="name"
+							name="first_name"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Email</FormLabel>
+									<FormLabel>First Name</FormLabel>
 									<FormControl>
-										<Input placeholder="Enter your name" {...field} />
+										<Input placeholder="Enter your first name" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="last_name"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Last Name</FormLabel>
+									<FormControl>
+										<Input placeholder="Enter your last name" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
