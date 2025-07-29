@@ -5,28 +5,31 @@ const signupUser = async (fname, lname, email, password) => {
   // Check if user already exists
   const existingUser = await _getUserByEmail(email);
 
-  if (existingUser.length > 0) {
-    throw new Error("User already exits");
-  }
+    if(user.length > 0) {
+        throw new Error("User already exits")
+    }
 
-  // Hash the password
-  const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS) || 10;
-  const hashpassword = await bcrypt.hash(password, saltRounds);
+    const hashpassword = await bcrypt.hash(
+    password,
+    parseInt(`${process.env.BCYRPT_SALT_ROUNDS}`)
+    );
 
-  // Insert the new user
-  const results = await query(
-    `INSERT INTO users (first_name, last_name, email, password)
-        VALUES ($1, $2, $3, $4)
-        RETURNING *;`, [
-    fname,
-    lname,
-    email,
-    hashpassword
-  ]
-  );
+    //query the changes in the table
+    const results = await query(
+        `INSERT INTO users (first_name, last_name, email, password)
+        VALUES ($1, $2, $3, $4, $5)
+        RETURNING *;`,[
+            fname,
+            lname,
+            email,
+            hashpassword
+        ]
+    )
 
-  return results[0]; // Return the first (and only) result
-};
+    return results;
+}
+
+const bcrypt = require('bcrypt');
 
 const loginUser = async ({ email, password }) => {
   const user = await _getUserByEmail(email);

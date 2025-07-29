@@ -36,6 +36,7 @@ const getPool = () => {
 // 5. Get the current pool
 const pool = getPool();
 
+
 async function connectTest() {
     const currentPool = getPool();
     currentPool.connect();

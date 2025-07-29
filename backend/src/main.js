@@ -3,6 +3,7 @@ const cors = require('cors');
 const AuthRouter = require('./routes/auth.route');
 const alertRoutes = require('./routes/alerts.route');
 const { connectTest } = require("./utils/db.utils");
+const { DiagnosticRouter } = require('./routes/diagnostic.route');
 require('dotenv').config();
 
 
@@ -24,6 +25,9 @@ app.get('/', (req, res) => {
   });
 });
 
+//routes
+app.use('/api/auth/', AuthRouter);
+app.use('/api/diagnostic', DiagnosticRouter);
 
 
 // Health check endpoint
@@ -51,19 +55,6 @@ app.get('/api/insurance', (req, res) => {
 //routes
 app.use('/api/auth/', AuthRouter);
 app.use('/api/users', alertRoutes);
-
-// Body parser error handling middleware
-app.use((err, req, res, next) => {
-  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
-    // Handle JSON parsing errors
-    return res.status(400).json({ 
-      success: false,
-      message: 'Invalid JSON format',
-      error: 'Bad Request'
-    });
-  }
-  next(err);
-});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
