@@ -26,7 +26,8 @@ app.get('/health', (req, res) => {
   res.json({ 
     status: 'OK',
     uptime: process.uptime(),
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    database: connectTest()
   });
 });
 
