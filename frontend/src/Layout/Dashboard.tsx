@@ -3,24 +3,26 @@ import './Dashboard.css';
 
 // React Icons (Ionicons v5)
 import {
-  IoLogoSass,
   IoCloseOutline,
   IoClipboardOutline,
   IoFileTrayStackedOutline,
-  IoSettingsOutline,
   IoLogOutOutline,
-  IoMenuOutline,
-  IoSearchOutline,
+  IoApertureSharp,
+  IoPin,
 } from "react-icons/io5";
+import { Button } from "@/components/ui/button";
 import UserProfile from "@/components/userprofile/userProfile";
 
 function Dashboard() {
+  const logout = () => {
+    localStorage.removeItem("token")
+  }
   return (
     <section>
       <div className="sidebar">
         <aside>
           <div className="header">
-            <IoLogoSass className="logo" />
+            <IoApertureSharp className="logo" />
             <div className="close">
               <IoCloseOutline />
             </div>
@@ -43,20 +45,22 @@ function Dashboard() {
               </Link>
             </div>
             <div className="bottom">
-              <Link to="/dashboard/profile">
+              <Link to="/dashboard/monitoredDestinations">
                 <div className="left">
-                  <IoSettingsOutline />
-                  <span>Settings</span>
+                  <IoPin />
+                  <span>Destinations</span>
                 </div>
                 <div className="right"></div>
               </Link>
-              <Link to="/dashboard/logout">
-                <div className="left">
-                  <IoLogOutOutline />
-                  <span>Logout</span>
-                </div>
-                <div className="right"></div>
-              </Link>
+              {
+                // <Button onClick={() => { logout }}>
+                //   <div className="left">
+                //     <IoLogOutOutline />
+                //     <span>Logout</span>
+                //   </div>
+                //   <div className="right"></div>
+                // </Button>
+              }
             </div>
           </div>
         </aside>
@@ -65,11 +69,8 @@ function Dashboard() {
         <div className="header">
           <div className="left">
             <div className="menu">
-              <IoMenuOutline />
             </div>
             <div className="search-bar">
-              <IoSearchOutline />
-              <input id="search" type="text" placeholder="search here" />
             </div>
           </div>
           {/** Pop over here for the user to update information and password**/}
