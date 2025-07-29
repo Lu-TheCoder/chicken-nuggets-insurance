@@ -56,11 +56,6 @@ const query = async (text, params, client) => {
     }
 };
 
-async function getUserAlertsByUserId(userId) {
-    const sql = 'SELECT * FROM user_alerts WHERE user_id = $1';
-    return await query(sql, [userId]);
-}
-
 // Function to close all pools (useful for tests)
 async function closeAllPools() {
     await mainPool.end();
@@ -73,7 +68,6 @@ module.exports = {
     testPool,
     getPool,
     connectTest,
-    getUserAlertsByUserId,
     query,
     closeAllPools
 };

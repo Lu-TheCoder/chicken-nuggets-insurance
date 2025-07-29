@@ -3,7 +3,10 @@ const { getErrorMessage } = require("../utils/error.utils");
 const { loginUser, signupUser } = require("../services/auth.services");
 const jwt = require("jsonwebtoken");
 const { ok, badRequest, serverError, conflict, unauthorized } = require("../utils/http.utils");
-require("dotenv").config();
+// Load environment variables quietly (only if not already loaded)
+if (!process.env.JWT_SECRET_KEY) {
+  require("dotenv").config({ silent: true });
+}
 
 const AuthRouter = Router();
 const secret = process.env.JWT_SECRET_KEY || "saoiiohobnea234rhh";
@@ -42,7 +45,7 @@ AuthRouter.post("/signup", async (req, res) => {
     }
     
     if (error instanceof Error) {
-      if (error.message === "User already exits") {
+      if (error.message === "User already exists") {
         return conflict(res, "User already exists");
       }
     }
