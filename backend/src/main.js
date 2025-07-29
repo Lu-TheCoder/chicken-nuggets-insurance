@@ -4,6 +4,7 @@ const AuthRouter = require('./routes/auth.route');
 const alertRoutes = require('./routes/alerts.route');
 const { connectTest } = require("./utils/db.utils");
 const { DiagnosticRouter } = require('./routes/diagnostic.route');
+const { DestinationRouter } = require('./routes/destination.route');
 require('dotenv').config();
 
 
@@ -54,7 +55,9 @@ app.get('/api/insurance', (req, res) => {
 
 //routes
 app.use('/api/auth/', AuthRouter);
-app.use('/api/users', alertRoutes);
+app.use('/api/users/', alertRoutes);
+app.use('/api/destinantion/', DestinationRouter);
+app.use('/api/diagnostic/', DiagnosticRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

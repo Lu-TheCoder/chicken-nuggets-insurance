@@ -1,0 +1,2 @@
+ALTER TABLE monitored_destinations 
+DROP CONSTRAINT monitored_constaints;

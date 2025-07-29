@@ -5,7 +5,7 @@ const signupUser = async (fname, lname, email, password) => {
   // Check if user already exists
   const existingUser = await _getUserByEmail(email);
 
-    if(user.length > 0) {
+    if(existingUser.length > 0) {
         throw new Error("User already exits")
     }
 
@@ -28,8 +28,6 @@ const signupUser = async (fname, lname, email, password) => {
 
     return results;
 }
-
-const bcrypt = require('bcrypt');
 
 const loginUser = async ({ email, password }) => {
   const user = await _getUserByEmail(email);
