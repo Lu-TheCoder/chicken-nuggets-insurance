@@ -14,10 +14,11 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
 });
 
-function connectTest() {
+async function connectTest() {
     pool.connect();
     pool.on('connect', () => {
-        console.log("connected");
+        console.log("DATABASE connected");
+        // return "Database connected";
     });
 }
 

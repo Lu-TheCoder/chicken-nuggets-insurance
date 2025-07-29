@@ -1,6 +1,4 @@
-function Profile () {
-
-
+function Profile() {
     return (
         <h1>Hello, it's profile</h1>
     )

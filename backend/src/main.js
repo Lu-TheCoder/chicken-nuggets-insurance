@@ -1,8 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 const AuthRouter = require('./routes/auth.route');
+<<<<<<< HEAD
 const alertRoutes = require('./routes/alerts.route');
+=======
+const { connectTest } = require("./utils/db.utils");
+>>>>>>> f8ede27537c56f2f997770aeee63d015c40e9fe5
 require('dotenv').config();
+
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -22,13 +27,15 @@ app.get('/', (req, res) => {
   });
 });
 
+
+
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/health', async (req, res) => {
   res.json({ 
     status: 'OK',
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
-    database: connectTest()
+    // database: await connectTest() THIS DOESNT WORK "FOR NOW"
   });
 });
 
@@ -70,4 +77,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
   console.log(`📱 Health check: http://localhost:${PORT}/health`);
   console.log(`🌐 API base: http://localhost:${PORT}/api`);
+  connectTest();
 });
