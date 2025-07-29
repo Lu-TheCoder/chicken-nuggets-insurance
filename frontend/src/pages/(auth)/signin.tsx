@@ -22,6 +22,7 @@ const signinSchema = z.object({
 
 const Signin = () => {
 	const [show, setShow] = useState(false)
+	const [error, setError] = useState("")
 
 	const form = useForm<z.infer<typeof signinSchema>>({
 		resolver: zodResolver(signinSchema),
@@ -31,10 +32,36 @@ const Signin = () => {
 		}
 	})
 
-	const onSubmit = (data: z.infer<typeof signinSchema>) => {
-		console.log(data)
-	}
+	const onSubmit = async (data: z.infer<typeof signinSchema>) => {
+		try {
+			const response = await fetch("http://localhost:3001/api/auth/login", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data)
+			});
 
+			if (!response.ok) {
+				if (response.status === 401) {
+					setError("Invalid email or password");
+				} else {
+					setError("Something went wrong");
+				}
+				return;
+			}
+
+			const token = await response.text();
+			localStorage.setItem("token", token);
+			setError("");
+
+			// Redirect 
+			console.log("Logged in! Token:", token);
+			window.location.href = "/dashboard";
+
+		} catch (err) {
+			console.error(err);
+			setError("Server error");
+		}
+	}
 	return (
 		<main className="flex flex-col w-screen h-screen items-center justify-center">
 			<h1>Sing In </h1>
@@ -72,6 +99,7 @@ const Signin = () => {
 										</Button>
 									</div>
 								</FormControl>
+								{error && <p className="text-red-500 text-sm">{error}</p>}
 								<FormMessage />
 							</FormItem>
 						)}

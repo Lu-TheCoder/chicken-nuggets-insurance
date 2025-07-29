@@ -16,25 +16,50 @@ import { BsEye, BsEyeSlash } from "react-icons/bs"
 import { Link } from "react-router-dom";
 
 const signupSchema = z.object({
-	name: z.string().min(1, "Name is required"),
+	first_name: z.string().min(1, "Name is required"),
+	last_name: z.string().min(1, "Name is required"),
 	email: z.string().email("Invalid email"),
 	password: z.string().min(8, 'Password must be at least 6 characters'),
 })
 
 const Signup = () => {
 	const [show, setShow] = useState(false)
+	const [error, setError] = useState("")
 
 	const form = useForm<z.infer<typeof signupSchema>>({
 		resolver: zodResolver(signupSchema),
 		defaultValues: {
-			name: "",
+			first_name: "",
+			last_name: "",
 			email: "",
 			password: "",
 		}
 	})
 
-	const onSubmit = (data: z.infer<typeof signupSchema>) => {
-		console.log(data)
+	const onSubmit = async (data: z.infer<typeof signupSchema>) => {
+		try {
+			const response = await fetch("http://localhost:3001/api/auth/signup", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data)
+			});
+
+			if (!response.ok) {
+				if (response.status === 409) {
+					setError("User already exists. Try logging in instead.");
+				} else {
+					setError("Something went wrong.");
+				}
+				return;
+			}
+
+
+			window.location.href = "/signin";
+
+		} catch (err) {
+			console.error(err);
+			setError("Server error. Please try again later.");
+		}
 	}
 
 	return (
@@ -44,12 +69,25 @@ const Signup = () => {
 				<form onSubmit={form.handleSubmit(onSubmit)} className="w-1/3 space-y-6 text-left">
 					<FormField
 						control={form.control}
-						name="name"
+						name="first_name"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Name</FormLabel>
+								<FormLabel>First Name</FormLabel>
 								<FormControl>
-									<Input placeholder="John doe" {...field} />
+									<Input placeholder="John" {...field} />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name="last_name"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Last Name</FormLabel>
+								<FormControl>
+									<Input placeholder="Doe" {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -87,6 +125,7 @@ const Signup = () => {
 										</Button>
 									</div>
 								</FormControl>
+								{error && <p className="text-red-500 text-sm">{error}</p>}
 								<FormMessage />
 							</FormItem>
 						)}

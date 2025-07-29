@@ -10,11 +10,12 @@ import HealthCreate from '../pages/health/sub-pages/create/HealthCreate';
 
 import Signin from '@/pages/(auth)/signin';
 import Signup from '@/pages/(auth)/signup';
+import RequireAuth from '@/guard/requireAuth';
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route path="dashboard" element={<Dashboard />}>
+      <Route path="dashboard" element={<RequireAuth><Dashboard /></RequireAuth>}>
         <Route path="alerts" element={<Alerts />} />
         <Route path="profile" element={<Profile />} />
 
