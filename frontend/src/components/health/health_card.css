@@ -1,0 +1,26 @@
+.health_card {
+    display: grid;
+    grid-template-columns: 2fr 3fr 1fr 1fr;
+    align-items: center;
+    justify-content: space-between; 
+    padding: 0.5rem 2rem;
+    background-color: var(--background-grey);
+    border-radius: 7.5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    height: 3.5rem;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.edit {
+    color: aqua;
+    font-size: 1.25rem;
+}
+
+.delete {
+    color: red;
+    font-size: 1.25rem;
+}
