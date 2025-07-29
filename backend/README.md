@@ -21,6 +21,7 @@ You should see:
 🚀 Server is running on port 3000
 📱 Health check: http://localhost:3000/health
 🌐 API base: http://localhost:3000/api
+DATABASE connected
 ```
 
 ## API Endpoints
