@@ -52,7 +52,7 @@ const loginUser = async ({ email, password }) => {
  * @returns the user or empty as array
  */
 const _getUserByEmail = async (email) => {
-  const results = await query("SELECT * FROM user WHERE email ILIKE $1;", [
+  const results = await query("SELECT * FROM users WHERE email ILIKE $1;", [
     email,
   ]);
 
