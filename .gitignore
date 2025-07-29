@@ -47,3 +47,6 @@ database/src/.DS_Store
 *.njsproj
 *.sln
 *.sw?
+
+#.env files
+.env
