@@ -10,22 +10,40 @@ const secret = process.env.JWT_SECRET_KEY || "saoiiohobnea234rhh";
 
 AuthRouter.post("/signup", async (req, res) => {
   try {
-    const user = req.body;
-    if (user === null || user === undefined) {
-      badRequest(res);
-      return;
+    // Validate request body exists
+    if (!req.body || typeof req.body !== 'object') {
+      return badRequest(res, "Invalid request body");
     }
 
-    const { first_name, last_name, email, password } = user;
-    const result = await signupUser(first_name, last_name, email, password);
+    const { first_name, last_name, email, password } = req.body;
+    
+    // Validate required fields
+    if (!first_name || !last_name || !email || !password) {
+      return badRequest(res, "Missing required fields: first_name, last_name, email, password");
+    }
 
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return badRequest(res, "Invalid email format");
+    }
+
+    // Validate password length
+    if (password.length < 6) {
+      return badRequest(res, "Password must be at least 6 characters long");
+    }
+
+    const result = await signupUser(first_name, last_name, email, password);
     ok(res, result);
   } catch (error) {
-    console.log(error)
+    // Only log errors in development or when not in test mode
+    if (process.env.NODE_ENV !== 'test') {
+      console.log(error);
+    }
+    
     if (error instanceof Error) {
       if (error.message === "User already exits") {
-        conflict(res, "User already Exist");
-        return;
+        return conflict(res, "User already exists");
       }
     }
     serverError(res, getErrorMessage(error));
@@ -34,13 +52,29 @@ AuthRouter.post("/signup", async (req, res) => {
 
 AuthRouter.post("/login", async (req, res) => {
   try {
+    // Validate request body exists
+    if (!req.body || typeof req.body !== 'object') {
+      return badRequest(res, "Invalid request body");
+    }
+    
     const { password, email } = req.body;
+    
+    // Validate required fields
+    if (!email || !password) {
+      return badRequest(res, "Missing required fields: email, password");
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return badRequest(res, "Invalid email format");
+    }
+
     const credentials = { password, email };
     const result = await loginUser(credentials);
 
     if (!result) {
-      badRequest(res);
-      return;
+      return badRequest(res, "Login failed");
     }
 
     const token = jwt.sign(
@@ -56,17 +90,19 @@ AuthRouter.post("/login", async (req, res) => {
 
     ok(res, token);
   } catch (error) {
-    console.log(error)
+    // Only log errors in development or when not in test mode
+    if (process.env.NODE_ENV !== 'test') {
+      console.log(error);
+    }
+    
     if (error instanceof Error) {
       if (error.message === "Invalid email" || error.message === "Invalid password") {
-        unauthorized(res, "invalid credentials");
-        return;
+        return unauthorized(res, "Invalid credentials");
       }
     }
     serverError(res, getErrorMessage(error));
   }
 });
-
 
 // AuthRouter.post("/logout", async (req, res) => {
 //   try {

@@ -52,10 +52,28 @@ app.get('/api/insurance', (req, res) => {
 app.use('/api/auth/', AuthRouter);
 app.use('/api/users', alertRoutes);
 
+// Body parser error handling middleware
+app.use((err, req, res, next) => {
+  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+    // Handle JSON parsing errors
+    return res.status(400).json({ 
+      success: false,
+      message: 'Invalid JSON format',
+      error: 'Bad Request'
+    });
+  }
+  next(err);
+});
+
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  // Only log errors in development or when not in test mode
+  if (process.env.NODE_ENV !== 'test') {
+    console.error('Error:', err.message);
+  }
+  
   res.status(500).json({ 
+    success: false,
     error: 'Something went wrong!',
     message: err.message 
   });
@@ -64,15 +82,20 @@ app.use((err, req, res, next) => {
 //404 handler
 app.use((req, res) => {
   res.status(404).json({ 
+    success: false,
     error: 'Route not found',
     path: req.originalUrl 
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
-  console.log(`📱 Health check: http://localhost:${PORT}/health`);
-  console.log(`🌐 API base: http://localhost:${PORT}/api`);
-  connectTest();
-});
+// Only start the server if not in test mode
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server is running on port ${PORT}`);
+    console.log(`📱 Health check: http://localhost:${PORT}/health`);
+    console.log(`🌐 API base: http://localhost:${PORT}/api`);
+    connectTest();
+  });
+}
+
+module.exports = app;
