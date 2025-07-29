@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const AuthRouter = require('./routes/auth.route');
+const alertRoutes = require('./routes/alerts.route');
 require('dotenv').config();
 
 const app = express();
@@ -45,6 +46,7 @@ app.get('/api/insurance', (req, res) => {
 
 //routes
 app.use('/api/auth/', AuthRouter);
+app.use('/api/users', alertRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

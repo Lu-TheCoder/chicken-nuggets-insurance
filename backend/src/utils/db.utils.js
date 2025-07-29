@@ -7,7 +7,7 @@ dotenv.config();
 // 2. Create connection pool
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
-  port: process.env.PORT,
+  port: process.env.DB_PORT,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DATABASE,
@@ -32,8 +32,14 @@ const query = async (text, params, client) => {
     }
 };
 
+async function getUserAlertsByUserId(userId) {
+    const sql = 'SELECT * FROM user_alerts WHERE user_id = $1';
+    return await query(sql, [userId]);
+}
+
 module.exports = {
     pool,
     connectTest,
+    getUserAlertsByUserId,
     query
 };
