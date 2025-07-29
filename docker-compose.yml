@@ -14,5 +14,21 @@ services:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
 
+  postgres-test:
+    build:
+      context: ./database
+      dockerfile: Database.Dockerfile
+    container_name: chicken-nuggets-postgres-test
+    environment:
+      POSTGRES_DB: chicken_nuggets_insurance_test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
 volumes:
   postgres_data:
+  postgres_test_data:
