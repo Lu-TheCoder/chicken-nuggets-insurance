@@ -7,17 +7,18 @@ dotenv.config();
 // 2. Create connection pool
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
-  port: process.env.PORT,
+  port: process.env.DB_PORT,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DATABASE,
   connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
 });
 
-function connectTest() {
+async function connectTest() {
     pool.connect();
     pool.on('connect', () => {
-        console.log("connected");
+        console.log("DATABASE connected");
+        // return "Database connected";
     });
 }
 
