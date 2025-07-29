@@ -10,14 +10,14 @@ const secrete = process.env.JWT_SECRET_KEY;
 
 AuthRouter.post("/signup", async (req, res) => {
   try {
-    // const user = req.body;
-    // if (user === null || user === undefined) {
-    //   badRequest(res);
-    //   return;
-    // }
+    const user = req.body;
+    if (user === null || user === undefined) {
+      badRequest(res);
+      return;
+    }
 
-    // const {name, email, password} = user;
-    // const result = await signupUser(name, email, password);
+    const {first_name, last_name, email, password} = user;
+    const result = await signupUser(first_name, last_name, email, password);
    
     ok(res, result);
   } catch (error) {
@@ -33,22 +33,22 @@ AuthRouter.post("/signup", async (req, res) => {
 
 AuthRouter.post("/login", async (req, res) => {
   try {
-    // const { password, email } = req.body;
-    // const credentials = { password, email };
-    // const result = await loginUser(credentials);
+    const { password, email } = req.body;
+    const credentials = { password, email };
+    const result = await loginUser(credentials);
     
-    // if (!result) {
-    //   badRequest(res);
-    //   return;
-    // }
+    if (!result) {
+      badRequest(res);
+      return;
+    }
     
-    // const token = jwt.sign(
-    //   {
-    //     id: result.id
-    //   },
-    //   secrete,
-    //   { expiresIn: "26hr" }
-    // );
+    const token = jwt.sign(
+      {
+        id: result.id
+      },
+      secrete,
+      { expiresIn: "26hr" }
+    );
     
     ok(res, token);
   } catch (error) {
@@ -63,15 +63,15 @@ AuthRouter.post("/login", async (req, res) => {
 });
 
 
-AuthRouter.post("/logout", async (req, res) => {
-  try {
+// AuthRouter.post("/logout", async (req, res) => {
+//   try {
     
-    //logout logic
+//     //logout logic
     
-    ok(res, null, "Logged out successfully");
-  } catch (error) {
-    serverError(res, getErrorMessage(error));
-  }
-});
+//     ok(res, null, "Logged out successfully");
+//   } catch (error) {
+//     serverError(res, getErrorMessage(error));
+//   }
+// }); WILL BE HANDLED BY FRONT END
 
 module.exports = AuthRouter;
