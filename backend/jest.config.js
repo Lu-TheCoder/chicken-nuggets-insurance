@@ -16,6 +16,8 @@ module.exports = {
   coverageReporters: ['text', 'lcov', 'html'],
   testTimeout: 10000,
   verbose: true,
+  // Suppress console logs during tests
+  silent: false,
   projects: [
     {
       displayName: 'database',

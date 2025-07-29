@@ -3,8 +3,6 @@ const { fetchUserAlerts } = require('../services/alerts.services');
 
 const router = express.Router();
 
-console.log('[alerts.route.js] Alert routes loaded');
-
 // TEMP TEST ROUTE
 router.get('/test', (req, res) => {
     res.json({ message: '✅ Alert router test route works' });

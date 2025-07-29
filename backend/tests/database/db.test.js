@@ -1,4 +1,4 @@
-const db = require('../../src/utils/db.utils');
+const DB = require('../../src/utils/db.v2.utils');
 const { setupTestData, cleanupTestData, cleanupConnections } = require('../setup');
 
 describe('Database Configuration', () => {
@@ -16,25 +16,29 @@ describe('Database Configuration', () => {
     expect(process.env.NODE_ENV).toBe('test');
     
     // Test a simple query
+    const db = DB.getInstance();
     const result = await db.query('SELECT 1 as test');
-    expect(result).toEqual([{ test: 1 }]);
+    expect(result.rows).toEqual([{ test: 1 }]);
   });
 
   it('should be able to query the users table', async () => {
+    const db = DB.getInstance();
     const users = await db.query('SELECT * FROM users WHERE email = $1', ['test@test.com']);
-    expect(users).toHaveLength(1);
-    expect(users[0].email).toBe('test@test.com');
+    expect(users.rows).toHaveLength(1);
+    expect(users.rows[0].email).toBe('test@test.com');
   });
 
   it('should use the correct database configuration', () => {
-    const testPool = db.testPool;
-    const mainPool = db.mainPool;
+    const db = DB.getInstance();
     
-    // Verify both pools exist
-    expect(testPool).toBeDefined();
-    expect(mainPool).toBeDefined();
+    // Verify the instance exists
+    expect(db).toBeDefined();
     
-    // Verify we're using the test pool in test environment
-    expect(db.getPool()).toBe(testPool);
+    // Verify we're using the test environment
+    expect(db.isTestEnvironment()).toBe(true);
+    
+    // Verify we can get the pool
+    const pool = db.getPool();
+    expect(pool).toBeDefined();
   });
 }); 
