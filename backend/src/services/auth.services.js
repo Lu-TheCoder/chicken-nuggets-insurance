@@ -1,31 +1,31 @@
 const { query } = require("../utils/db.utils");
 
-const signupUser = async (fname, lname, email, password) =>{
-    //query for adding user
-    const user = await _getUserByEmail(email);
+const signupUser = async (fname, lname, email, password) => {
+  //query for adding user
+  const user = await _getUserByEmail(email);
 
-    if(user.le > 0) {
-        throw new Error("User already exits")
-    }
+  if (user.le > 0) {
+    throw new Error("User already exits")
+  }
 
-    const hashpassword = await bcrypt.hash(
+  const hashpassword = await bcrypt.hash(
     password,
     parseInt(`${process.env.BCYRPT_SALT_ROUNDS}`)
-    );
+  );
 
-    //query the changes in the table
-    const results = await query(
-        `INSERT INTO users (first_name, last_name, email, password)
-        VALUES ($1, $2, $3, $4, $5)
-        RETURNING *;`,[
-            fname,
-            lname,
-            email,
-            hashpassword
-        ]
-    )
+  //query the changes in the table
+  const results = await query(
+    `INSERT INTO users (first_name, last_name, email, password)
+        VALUES ($1, $2, $3, $4)
+        RETURNING *;`, [
+    fname,
+    lname,
+    email,
+    hashpassword
+  ]
+  )
 
-    return results;
+  return results;
 }
 
 const bcrypt = require('bcrypt');
@@ -62,6 +62,6 @@ const _getUserByEmail = async (email) => {
 
 
 module.exports = {
-    signupUser,
-    loginUser
+  signupUser,
+  loginUser
 }

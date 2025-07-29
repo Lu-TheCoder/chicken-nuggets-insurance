@@ -6,7 +6,7 @@ const { ok, badRequest, serverError, conflict, unauthorized } = require("../util
 require("dotenv").config();
 
 const AuthRouter = Router();
-const secrete = process.env.JWT_SECRET_KEY;
+const secret = process.env.JWT_SECRET_KEY || "saoiiohobnea234rhh";
 
 AuthRouter.post("/signup", async (req, res) => {
   try {
@@ -16,11 +16,12 @@ AuthRouter.post("/signup", async (req, res) => {
       return;
     }
 
-    const {first_name, last_name, email, password} = user;
+    const { first_name, last_name, email, password } = user;
     const result = await signupUser(first_name, last_name, email, password);
-   
+
     ok(res, result);
   } catch (error) {
+    console.log(error)
     if (error instanceof Error) {
       if (error.message === "User already exits") {
         conflict(res, "User already Exist");
@@ -36,22 +37,26 @@ AuthRouter.post("/login", async (req, res) => {
     const { password, email } = req.body;
     const credentials = { password, email };
     const result = await loginUser(credentials);
-    
+
     if (!result) {
       badRequest(res);
       return;
     }
-    
+
     const token = jwt.sign(
       {
-        id: result.id
+        id: result.id,
+        fname: result.first_name,
+        lname: result.last_name,
+        email: result.email
       },
-      secrete,
+      secret,
       { expiresIn: "26hr" }
     );
-    
+
     ok(res, token);
   } catch (error) {
+    console.log(error)
     if (error instanceof Error) {
       if (error.message === "Invalid email" || error.message === "Invalid password") {
         unauthorized(res, "invalid credentials");
@@ -65,9 +70,9 @@ AuthRouter.post("/login", async (req, res) => {
 
 // AuthRouter.post("/logout", async (req, res) => {
 //   try {
-    
+
 //     //logout logic
-    
+
 //     ok(res, null, "Logged out successfully");
 //   } catch (error) {
 //     serverError(res, getErrorMessage(error));
