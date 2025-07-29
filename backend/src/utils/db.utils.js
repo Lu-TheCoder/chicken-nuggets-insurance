@@ -33,14 +33,8 @@ const query = async (text, params, client) => {
     }
 };
 
-async function getUserAlertsByUserId(userId) {
-    const sql = 'SELECT * FROM user_alerts WHERE user_id = $1';
-    return await query(sql, [userId]);
-}
-
 module.exports = {
     pool,
     connectTest,
-    getUserAlertsByUserId,
     query
 };
