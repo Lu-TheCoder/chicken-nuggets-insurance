@@ -1,0 +1,23 @@
+.alerts_section {
+    display: flex;
+    flex-direction: column;
+}
+
+.alerts_header {
+    border-bottom: 1px solid var(--color-grey);
+    padding: 1rem 2rem;
+}
+
+.alerts_top {
+    display: grid;
+    grid-template-columns: 2fr 3fr 1fr;
+    padding: 0.5rem 2rem;
+    color: grey;
+}
+
+.alerts_container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0rem 1rem;
+}

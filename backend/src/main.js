@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const AuthRouter = require('./routes/auth.route');
+const alertRoutes = require('./routes/alerts.route');
 const { connectTest } = require("./utils/db.utils");
 const { DiagnosticRouter } = require('./routes/diagnostic.route');
 require('dotenv').config();
@@ -51,12 +52,19 @@ app.get('/api/insurance', (req, res) => {
   });
 });
 
-
+//routes
+app.use('/api/auth/', AuthRouter);
+app.use('/api/users', alertRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  // Only log errors in development or when not in test mode
+  if (process.env.NODE_ENV !== 'test') {
+    console.error('Error:', err.message);
+  }
+  
   res.status(500).json({ 
+    success: false,
     error: 'Something went wrong!',
     message: err.message 
   });
@@ -65,15 +73,20 @@ app.use((err, req, res, next) => {
 //404 handler
 app.use((req, res) => {
   res.status(404).json({ 
+    success: false,
     error: 'Route not found',
     path: req.originalUrl 
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on port ${PORT}`);
-  console.log(`📱 Health check: http://localhost:${PORT}/health`);
-  console.log(`🌐 API base: http://localhost:${PORT}/api`);
-  connectTest();
-});
+// Only start the server if not in test mode
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server is running on port ${PORT}`);
+    console.log(`📱 Health check: http://localhost:${PORT}/health`);
+    console.log(`🌐 API base: http://localhost:${PORT}/api`);
+    connectTest();
+  });
+}
+
+module.exports = app;

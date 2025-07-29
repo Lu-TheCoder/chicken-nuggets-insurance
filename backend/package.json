@@ -6,7 +6,16 @@
   "scripts": {
     "start": "node src/main.js",
     "dev": "nodemon src/main.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    
+    "test": "jest --runInBand",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:db": "jest --runInBand tests/database",
+    "test:integration": "jest --runInBand tests/integration",
+    "test:unit": "jest --runInBand tests/unit",
+    "test:db:start": "./scripts/start-test-db.sh",
+    "test:db:stop": "docker-compose stop postgres-test",
+    "test:db:reset": "docker-compose stop postgres-test && docker-compose rm -f postgres-test && docker-compose up -d postgres-test"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +30,8 @@
     "pg": "^8.16.3"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "jest": "^30.0.5",
+    "supertest": "^7.1.4"
   }
 }

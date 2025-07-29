@@ -1,11 +1,11 @@
 const { query } = require("../utils/db.utils");
 const bcrypt = require('bcrypt');
 
-const signupUser = async (fname, lname, email, password) =>{
-    //query for adding user
-    const user = await _getUserByEmail(email);
+const signupUser = async (fname, lname, email, password) => {
+  // Check if user already exists
+  const existingUser = await _getUserByEmail(email);
 
-    if(user.le > 0) {
+    if(user.length > 0) {
         throw new Error("User already exits")
     }
 
@@ -17,7 +17,7 @@ const signupUser = async (fname, lname, email, password) =>{
     //query the changes in the table
     const results = await query(
         `INSERT INTO users (first_name, last_name, email, password)
-        VALUES ($1, $2, $3, $4)
+        VALUES ($1, $2, $3, $4, $5)
         RETURNING *;`,[
             fname,
             lname,
@@ -29,7 +29,7 @@ const signupUser = async (fname, lname, email, password) =>{
     return results;
 }
 
-
+const bcrypt = require('bcrypt');
 
 const loginUser = async ({ email, password }) => {
   const user = await _getUserByEmail(email);
@@ -60,9 +60,7 @@ const _getUserByEmail = async (email) => {
   return results;
 };
 
-
-
 module.exports = {
-    signupUser,
-    loginUser
-}
+  signupUser,
+  loginUser
+};

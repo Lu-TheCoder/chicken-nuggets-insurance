@@ -11,8 +11,8 @@ import {
   IoLogOutOutline,
   IoMenuOutline,
   IoSearchOutline,
-  IoChevronDownOutline
 } from "react-icons/io5";
+import UserProfile from "@/components/userprofile/userProfile";
 
 function Dashboard() {
   return (
@@ -34,10 +34,10 @@ function Dashboard() {
                 </div>
                 <div className="right"></div>
               </Link>
-              <Link to="/">
+              <Link to="/dashboard/health">
                 <div className="left">
                   <IoFileTrayStackedOutline />
-                  <span>CRUD Operations</span>
+                  <span>AI Health</span>
                 </div>
                 <div className="right"></div>
               </Link>
@@ -72,10 +72,8 @@ function Dashboard() {
               <input id="search" type="text" placeholder="search here" />
             </div>
           </div>
-          <div className="user">
-            <span>Boitumelo Mkhwanazi</span>
-            <IoChevronDownOutline />
-          </div>
+          {/** Pop over here for the user to update information and password**/}
+          <UserProfile />
         </div>
         <div>
           <Outlet />
