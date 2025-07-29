@@ -6,12 +6,12 @@ dotenv.config();
 
 // 2. Create connection pool
 const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DATABASE,
-  connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || '5433',
+    user: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || 'postgres',
+    database: process.env.DATABASE || 'chicken_nuggets_insurance',
+    connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
 });
 
 async function connectTest() {
