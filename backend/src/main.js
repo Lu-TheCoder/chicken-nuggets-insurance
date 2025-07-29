@@ -9,7 +9,6 @@ const { DiagnosticRouter } = require('./routes/diagnostic.route');
 const { DestinationRouter } = require('./routes/destination.route');
 require('dotenv').config();
 
-=======
 const DB = require('./utils/db.v2.utils');
 const { DiagnosticRouter } = require('./routes/diagnostic.route');
 // Load environment variables quietly (only if not already loaded)
