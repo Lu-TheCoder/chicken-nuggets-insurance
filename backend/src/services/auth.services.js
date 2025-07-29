@@ -1,4 +1,5 @@
 const { query } = require("../utils/db.utils");
+const bcrypt = require('bcrypt');
 
 const signupUser = async (fname, lname, email, password) =>{
     //query for adding user
@@ -16,7 +17,7 @@ const signupUser = async (fname, lname, email, password) =>{
     //query the changes in the table
     const results = await query(
         `INSERT INTO users (first_name, last_name, email, password)
-        VALUES ($1, $2, $3, $4, $5)
+        VALUES ($1, $2, $3, $4)
         RETURNING *;`,[
             fname,
             lname,
@@ -28,7 +29,7 @@ const signupUser = async (fname, lname, email, password) =>{
     return results;
 }
 
-const bcrypt = require('bcrypt');
+
 
 const loginUser = async ({ email, password }) => {
   const user = await _getUserByEmail(email);

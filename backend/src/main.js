@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const AuthRouter = require('./routes/auth.route');
 const { connectTest } = require("./utils/db.utils");
+const { DiagnosticRouter } = require('./routes/diagnostic.route');
 require('dotenv').config();
 
 
@@ -23,6 +24,9 @@ app.get('/', (req, res) => {
   });
 });
 
+//routes
+app.use('/api/auth/', AuthRouter);
+app.use('/api/diagnostic', DiagnosticRouter);
 
 
 // Health check endpoint
@@ -47,8 +51,7 @@ app.get('/api/insurance', (req, res) => {
   });
 });
 
-//routes
-app.use('/api/auth/', AuthRouter);
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
