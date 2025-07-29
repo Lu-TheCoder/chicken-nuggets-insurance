@@ -1,0 +1,23 @@
+.alert_card {
+  display: grid;
+  grid-template-columns: 2fr 3fr 1fr;
+  align-items: center;
+  justify-content: space-between; 
+  padding: 0.5rem 2rem;
+  background-color: var(--background-grey);
+  border-radius: 7.5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+
+.alert_status {
+    background-color: red;
+    color: white;
+    width: max-content;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+}
+
+.alert_description {
+    color: grey;
+} 

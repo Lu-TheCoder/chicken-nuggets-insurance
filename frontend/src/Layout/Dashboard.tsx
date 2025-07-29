@@ -34,10 +34,10 @@ function Dashboard() {
                 </div>
                 <div className="right"></div>
               </Link>
-              <Link to="/">
+              <Link to="/dashboard/health">
                 <div className="left">
                   <IoFileTrayStackedOutline />
-                  <span>CRUD Operations</span>
+                  <span>AI Health</span>
                 </div>
                 <div className="right"></div>
               </Link>
