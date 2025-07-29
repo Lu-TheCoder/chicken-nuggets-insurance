@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
+const AuthRouter = require('./routes/auth.route');
+const { connectTest } = require("./utils/db.utils");
 require('dotenv').config();
+
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -9,6 +12,7 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 // Basic route
 app.get('/', (req, res) => {
@@ -19,12 +23,15 @@ app.get('/', (req, res) => {
   });
 });
 
+
+
 // Health check endpoint
-app.get('/health', (req, res) => {
+app.get('/health', async (req, res) => {
   res.json({ 
     status: 'OK',
     uptime: process.uptime(),
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    // database: await connectTest() THIS DOESNT WORK "FOR NOW"
   });
 });
 
@@ -40,6 +47,9 @@ app.get('/api/insurance', (req, res) => {
   });
 });
 
+//routes
+app.use('/api/auth/', AuthRouter);
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -49,7 +59,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// 404 handler
+//404 handler
 app.use((req, res) => {
   res.status(404).json({ 
     error: 'Route not found',
@@ -62,4 +72,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
   console.log(`📱 Health check: http://localhost:${PORT}/health`);
   console.log(`🌐 API base: http://localhost:${PORT}/api`);
+  connectTest();
 });

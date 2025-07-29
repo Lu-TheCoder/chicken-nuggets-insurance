@@ -2,10 +2,14 @@ import { Routes, Route } from 'react-router-dom';
 import Dashboard from '../Layout/Dashboard';
 import Alerts from '../pages/alerts/Alerts';
 import Profile from '../pages/profile/Profile';
+
 import Health from '../pages/health/Health';
 import HealthDelete from '../pages/health/sub-pages/delete/HealthDelete';
 import HealthEdit from '../pages/health/sub-pages/edit/HealthEdit';
 import HealthCreate from '../pages/health/sub-pages/create/HealthCreate';
+
+import Signin from '@/pages/(auth)/signin';
+import Signup from '@/pages/(auth)/signup';
 
 const AppRoutes = () => {
   return (
@@ -20,6 +24,8 @@ const AppRoutes = () => {
           <Route path=":id/delete" element={<HealthDelete />} />
         </Route>
       </Route>
+      <Route path="signup" element={<Signup />} />
+      <Route path="signin" element={<Signin />} />
     </Routes>
 
   );

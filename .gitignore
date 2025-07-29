@@ -25,6 +25,18 @@ backend/yarn-debug.log*
 backend/yarn-error.log*
 backend/.DS_Store 
 
+# Database
+database/src/node_modules/
+database/src/.env
+database/src/.env.local
+database/src/.env.development.local
+database/src/.env.test.local
+database/src/.env.production.local
+database/src/npm-debug.log*
+database/src/yarn-debug.log*
+database/src/yarn-error.log*
+database/src/.DS_Store 
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
