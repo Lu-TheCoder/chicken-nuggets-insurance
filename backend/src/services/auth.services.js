@@ -4,12 +4,10 @@ const DB = require('../utils/db.v2.utils');
 const signupUser = async (fname, lname, email, password) => {
   // Check if user already exists
   const existingUser = await _getUserByEmail(email);
-  
-  if (existingUser.length > 0) {
-    throw new Error("User already exists");
-  }
 
-  const db = DB.getInstance();
+    if(existingUser.length > 0) {
+        throw new Error("User already exits")
+    }
 
   const hashpassword = await bcrypt.hash(
     password,
@@ -24,9 +22,10 @@ const signupUser = async (fname, lname, email, password) => {
     [fname, lname, email, hashpassword]
   );
 
-  // Return the first (and only) result from the INSERT
-  return results.rows[0];
-};
+    return results;
+}
+
+const bcrypt = require('bcrypt');
 
 const loginUser = async ({ email, password }) => {
   const user = await _getUserByEmail(email);

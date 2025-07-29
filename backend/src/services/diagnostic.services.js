@@ -7,6 +7,7 @@ const getDiagnostics = async (search, id, page, perPage) => {
 
   const results = await db.query(
     `SELECT 
+         id,
          name,
          test_result as result,
          created_at,
