@@ -6,18 +6,18 @@ const { ok, badRequest, serverError, conflict, unauthorized } = require("../util
 require("dotenv").config();
 
 const AuthRouter = Router();
-const secrete = process.env.JWT_SECRET_KEY;
+const secret = process.env.JWT_SECRET_KEY || 'your-secret-key';
 
 AuthRouter.post("/signup", async (req, res) => {
   try {
-    // const user = req.body;
-    // if (user === null || user === undefined) {
-    //   badRequest(res);
-    //   return;
-    // }
+    const user = req.body;
+    if (!user || !user.name || !user.email || !user.password) {
+      badRequest(res, "Missing required fields");
+      return;
+    }
 
-    // const {name, email, password} = user;
-    // const result = await signupUser(name, email, password);
+    const { name, email, password } = user;
+    const result = await signupUser(name, email, password);
    
     ok(res, result);
   } catch (error) {
@@ -33,28 +33,33 @@ AuthRouter.post("/signup", async (req, res) => {
 
 AuthRouter.post("/login", async (req, res) => {
   try {
-    // const { password, email } = req.body;
-    // const credentials = { password, email };
-    // const result = await loginUser(credentials);
+    const { password, email } = req.body;
     
-    // if (!result) {
-    //   badRequest(res);
-    //   return;
-    // }
+    if (!email || !password) {
+      badRequest(res, "Email and password are required");
+      return;
+    }
     
-    // const token = jwt.sign(
-    //   {
-    //     id: result.id
-    //   },
-    //   secrete,
-    //   { expiresIn: "26hr" }
-    // );
+    const result = await loginUser(email, password);
     
-    ok(res, token);
+    if (!result) {
+      unauthorized(res, "Invalid credentials");
+      return;
+    }
+    
+    const token = jwt.sign(
+      {
+        id: result.id
+      },
+      secret,
+      { expiresIn: "26hr" }
+    );
+    
+    ok(res, { token, user: result });
   } catch (error) {
     if (error instanceof Error) {
-      if (error.message === "Invalid email" || error.message === "Invalid password") {
-        unauthorized(res, "invalid credentials");
+      if (error.message === "Invalid credentials") {
+        unauthorized(res, "Invalid credentials");
         return;
       }
     }
@@ -62,10 +67,8 @@ AuthRouter.post("/login", async (req, res) => {
   }
 });
 
-
 AuthRouter.post("/logout", async (req, res) => {
   try {
-    
     //logout logic
     
     ok(res, null, "Logged out successfully");

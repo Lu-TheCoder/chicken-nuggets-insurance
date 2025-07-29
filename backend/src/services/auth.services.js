@@ -1,28 +1,61 @@
-const signupUser = async (name, email, password) =>{
-    //query for adding user
-    const user = await _getuser(email);
+const db = require('../config/database');
 
-    if(user.legth > 0) {
-        throw new Error("User already exits")
+const signupUser = async (name, email, password) => {
+    try {
+        // Check if user already exists
+        const existingUser = await db.query(
+            'SELECT * FROM users WHERE email = $1',
+            [email]
+        );
+
+        if (existingUser.rows.length > 0) {
+            throw new Error("User already exits");
+        }
+
+        // Insert new user
+        const result = await db.query(
+            'INSERT INTO users (first_name, last_name, email, password, role) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+            [name, '', email, password, 'user']
+        );
+
+        return result.rows[0];
+    } catch (error) {
+        throw error;
     }
+};
 
-    //query the changes in the table
-    // const results = await query 
+const loginUser = async (email, password) => {
+    try {
+        // Find user by email and password
+        const result = await db.query(
+            'SELECT * FROM users WHERE email = $1 AND password = $2',
+            [email, password]
+        );
 
-    return results[0];
-}
+        if (result.rows.length === 0) {
+            throw new Error("Invalid credentials");
+        }
 
-const loginUser = async(email, password) =>{
-    //query to find the user in the db
-}
+        return result.rows[0];
+    } catch (error) {
+        throw error;
+    }
+};
 
-const _getUser= async (email) =>{
-    //get user by email
-}
-
-
+const _getUser = async (email) => {
+    try {
+        const result = await db.query(
+            'SELECT * FROM users WHERE email = $1',
+            [email]
+        );
+        return result.rows;
+    } catch (error) {
+        throw error;
+    }
+};
 
 module.exports = {
     signupUser,
-    loginUser
-}
+    loginUser,
+    _getUser
+};
