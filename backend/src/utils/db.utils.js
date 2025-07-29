@@ -56,6 +56,7 @@ const query = async (text, params, client) => {
     }
 };
 
+
 // Function to close all pools (useful for tests)
 async function closeAllPools() {
     await mainPool.end();

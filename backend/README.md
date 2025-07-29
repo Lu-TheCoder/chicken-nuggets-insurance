@@ -50,3 +50,46 @@ Returns:
 ]
 
 ```
+
+### GET /monitored/user/:userId
+
+Description:
+Get all monitored destinations for the given user.
+
+Returns: An array of monitored destination objects
+
+Returns:
+
+```json
+[
+  {
+    "id": "uuid",
+    "user_id": "userID",
+    "location": "Location Name",
+    "risk_level": "Risk Level",
+    "last_checked_at": "timestamp",
+    "created_at": "timestamp",
+    "updated_at": "timestamp"
+  },
+  ...
+]
+```
+
+### GET /monitored/user/:userId/:id
+
+Description:
+Get all monitored destinations for the given user by its ID.
+
+Returns: A single monitored destination object or 404 if not found.
+
+### GET /monitored/user/:userId/search?location=&riskLevel=
+
+Description:
+Search monitored destinations for the given user, filtering optionally by location and/or risk level.
+
+Query Parameters:
+`location` (optional): Filter results by location (case-insensitive).
+`riskLevel`(optional): Filter results by risk level (case-insensitive).
+
+Returns:
+Array of filtered monitored destination objects.

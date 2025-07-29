@@ -1,7 +1,9 @@
+const { query } = require('../utils/db.utils');
 const DB = require('../utils/db.v2.utils');
 
 async function fetchUserAlerts(userId) {
-    return await getUserAlertsByUserId(userId);
+    const sql = 'SELECT * FROM user_alerts WHERE user_id = $1';
+    return await query(sql, [userId]);
 }
 
 async function getUserAlertsByUserId(userId) {
